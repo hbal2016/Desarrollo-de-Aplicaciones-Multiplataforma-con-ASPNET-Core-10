@@ -18,7 +18,64 @@ sudo -u postgres psql
 ```sql
 CREATE ROLE appuser WITH LOGIN PASSWORD 'TuPasswordSegura';
 CREATE DATABASE appdb OWNER appuser;
+ALTER ROLE appuser WITH LOGIN;
 \q
+```
+
+Ejemplo de archivo de configuración en el servidor, en /var/www/miapp/appsettings.Production.json:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=127.0.0.1;Port=5432;Database=appdb;Username=appuser;Password=TuPasswordSegura"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
+```
+
+Para usar esa conexión desde la aplicación Blazor, en Program.cs agrega:
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+```
+
+Y define un contexto como este:
+
+```csharp
+public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Producto> Productos => Set<Producto>();
+}
+```
+
+Ejemplo de uso en una página o componente Blazor:
+
+```razor
+@page "/productos"
+@inject AppDbContext DbContext
+
+<h3>Productos</h3>
+
+@code {
+    private List<Producto> productos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await DbContext.Productos.ToListAsync();
+    }
+}
 ```
 
 ### 3. Publicar y copiar la aplicación

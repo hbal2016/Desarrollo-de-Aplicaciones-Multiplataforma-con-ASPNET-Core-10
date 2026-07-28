@@ -11,7 +11,55 @@ Desplegar una aplicación ASP.NET Core 10 en un servidor Windows con PostgreSQL 
 3. Descarga NGINX para Windows y descomprímelo en C:\nginx.
 
 ### 2. Configurar PostgreSQL
-Crea una base de datos y un usuario con permisos, y actualiza la cadena de conexión en la aplicación.
+Crea una base de datos y un usuario con permisos en PostgreSQL para Windows:
+
+```sql
+CREATE ROLE appuser WITH LOGIN PASSWORD 'TuPasswordSegura';
+CREATE DATABASE appdb OWNER appuser;
+```
+
+Ejemplo de archivo de configuración en C:\inetpub\miapp\appsettings.Production.json:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=127.0.0.1;Port=5432;Database=appdb;Username=appuser;Password=TuPasswordSegura"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
+```
+
+En Program.cs de la aplicación Blazor:
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+```
+
+Ejemplo de uso en un componente Blazor:
+
+```razor
+@page "/productos"
+@inject AppDbContext DbContext
+
+@code {
+    private List<Producto> productos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await DbContext.Productos.ToListAsync();
+    }
+}
+```
 
 ### 3. Publicar la aplicación
 ```powershell

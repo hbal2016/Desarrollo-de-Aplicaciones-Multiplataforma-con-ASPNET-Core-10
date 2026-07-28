@@ -15,7 +15,52 @@ sudo dnf install -y dotnet-runtime-10.0 postgresql-server postgresql nginx
 ```bash
 sudo postgresql-setup --initdb
 ```
-Luego crea el usuario y la base de datos con psql.
+Luego crea el usuario y la base de datos con psql:
+
+```bash
+sudo -u postgres psql
+```
+```sql
+CREATE ROLE appuser WITH LOGIN PASSWORD 'TuPasswordSegura';
+CREATE DATABASE appdb OWNER appuser;
+\q
+```
+
+Ejemplo de archivo de configuración en /var/www/miapp/appsettings.Production.json:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=127.0.0.1;Port=5432;Database=appdb;Username=appuser;Password=TuPasswordSegura"
+  }
+}
+```
+
+En Program.cs de la aplicación Blazor:
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+```
+
+Y en un componente:
+
+```razor
+@inject AppDbContext DbContext
+
+@code {
+    private List<Producto> productos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await DbContext.Productos.ToListAsync();
+    }
+}
+```
 
 ### 3. Publicar y copiar la aplicación
 Publica la aplicación desde tu equipo de desarrollo y copia los archivos al servidor.
