@@ -1,6 +1,16 @@
 # Desarrollo de Aplicaciones Multiplataforma con ASP.NET Core 10 (Blazor)
 
-Este manual documenta, paso a paso, cómo preparar un entorno de desarrollo para una aplicación web con ASP.NET Core 10 y Blazor, así como su despliegue en un servidor Linux Ubuntu y en un servidor Windows Server 2025, usando PostgreSQL como motor de bases de datos y NGINX como motor web. No se usa IIS en ninguna de las dos opciones de despliegue.
+Este manual documenta, paso a paso, cómo preparar un entorno de desarrollo para una aplicación web con ASP.NET Core 10 y Blazor, así como su despliegue en un servidor Linux Ubuntu, Fedora/Red Hat y Windows Server 2025, usando PostgreSQL como motor de bases de datos y NGINX como motor web. No se usa IIS en ninguna de las opciones de despliegue.
+
+## Estructura del proyecto
+
+- [IDE/VisualStudio/ReadMe.md](IDE/VisualStudio/ReadMe.md)
+- [IDE/VSCode/ReadMe.md](IDE/VSCode/ReadMe.md)
+- [LINUX/UBUNTU/ReadMe.md](LINUX/UBUNTU/ReadMe.md)
+- [LINUX/FEDORA/ReadMe.md](LINUX/FEDORA/ReadMe.md)
+- [WINDOWS/ReadMe.md](WINDOWS/ReadMe.md)
+
+## 1. Entorno de desarrollo en Windows
 
 ## 1. Entorno de desarrollo en Windows
 
