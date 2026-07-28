@@ -30,13 +30,65 @@ scp -r publish/ usuario@servidor:/var/www/miapp
 ```
 
 ### 4. Ejecutar con systemd
-Crea un archivo de servicio en /etc/systemd/system/miapp.service y configura el comando para ejecutar la aplicación en http://127.0.0.1:5000.
+Crea un archivo de servicio en /etc/systemd/system/miapp.service con el siguiente contenido:
+
+```ini
+[Unit]
+Description=Mi aplicación Blazor en Ubuntu
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/miapp
+ExecStart=/usr/bin/dotnet /var/www/miapp/MiAppBlazor.dll
+Restart=always
+RestartSec=10
+User=www-data
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5000
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Activa y levanta el servicio:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable miapp
+sudo systemctl start miapp
+sudo systemctl status miapp
+```
 
 ### 5. Configurar NGINX
-Crea un bloque server en /etc/nginx/sites-available/miapp con proxy_pass a http://127.0.0.1:5000 y habilítalo.
+Crea un bloque server en /etc/nginx/sites-available/miapp con este contenido:
+
+```nginx
+server {
+    listen 80;
+    server_name ejemplo.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Activa el sitio y reinicia NGINX:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/miapp /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
 
 ### 6. Validación
 ```bash
 sudo systemctl status miapp
-sudo systemctl reload nginx
+sudo journalctl -u miapp -f
 ```

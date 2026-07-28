@@ -25,5 +25,48 @@ Usa NSSM o un servicio de Windows para ejecutar el archivo DLL y configura la va
 ASPNETCORE_URLS=http://127.0.0.1:5000
 ```
 
+Ejemplo con NSSM:
+
+```powershell
+nssm install MiAppApp "C:\Program Files\dotnet\dotnet.exe"
+"C:\inetpub\miapp\MiAppBlazor.dll"
+nssm set MiAppApp AppDirectory "C:\inetpub\miapp"
+nssm set MiAppApp AppEnvironmentExtra "ASPNETCORE_URLS=http://127.0.0.1:5000"
+nssm set MiAppApp AppEnvironmentExtra "ASPNETCORE_ENVIRONMENT=Production"
+nssm start MiAppApp
+```
+
 ### 5. Configurar NGINX
-Edita nginx.conf y añade un bloque server con proxy_pass a http://127.0.0.1:5000.
+Edita el archivo de configuración de NGINX, por ejemplo C:\nginx\conf\nginx.conf, con este contenido:
+
+```nginx
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 80;
+        server_name ejemplo.com;
+
+        location / {
+            proxy_pass http://127.0.0.1:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+```
+
+Inicia NGINX desde la consola o como servicio:
+
+```powershell
+cd C:\nginx
+nginx.exe
+```
