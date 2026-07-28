@@ -6,9 +6,22 @@ Desplegar una aplicación ASP.NET Core 10 en un servidor Windows con PostgreSQL 
 ## Pasos rápidos
 
 ### 1. Preparar el servidor
-1. Instala el runtime de .NET 10.
-2. Instala PostgreSQL para Windows.
-3. Descarga NGINX para Windows y descomprímelo en C:\nginx.
+1. Instala el runtime de .NET 10 desde Microsoft o desde el canal oficial de Windows que prefieras:
+   ```powershell
+   winget install Microsoft.DotNet.Runtime.10
+   ```
+   Referencia oficial: https://dotnet.microsoft.com/download/dotnet/10.0
+2. Instala PostgreSQL para Windows desde la página oficial de PostgreSQL:
+   ```powershell
+   winget install PostgreSQL.PostgreSQL
+   ```
+   Referencia oficial: https://www.postgresql.org/download/windows/
+3. Descarga NGINX para Windows desde el sitio oficial y descomprímelo en C:\nginx:
+   ```powershell
+   Invoke-WebRequest -Uri "https://nginx.org/download/nginx-1.27.0.zip" -OutFile "$env:TEMP\nginx.zip"
+   Expand-Archive -Path "$env:TEMP\nginx.zip" -DestinationPath "C:\nginx" -Force
+   ```
+   Referencia oficial: https://nginx.org/en/download.html
 
 ### 2. Configurar PostgreSQL
 Crea una base de datos y un usuario con permisos en PostgreSQL para Windows:

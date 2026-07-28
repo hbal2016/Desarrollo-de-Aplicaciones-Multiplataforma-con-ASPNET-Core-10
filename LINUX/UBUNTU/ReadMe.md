@@ -26,10 +26,17 @@ Si tu versión de Ubuntu no lo ofrece de forma inmediata, puedes verificar con:
 apt search dotnet-runtime-10.0
 ```
 
-Instala PostgreSQL y NGINX:
+Instala PostgreSQL y NGINX desde los repositorios oficiales de Ubuntu:
 
 ```bash
 sudo apt install -y postgresql postgresql-contrib nginx
+```
+
+Si prefieres revisar la disponibilidad de paquetes en tu versión de Ubuntu, puedes usar:
+
+```bash
+apt search postgresql
+apt search nginx
 ```
 
 Enlaces oficiales de referencia:

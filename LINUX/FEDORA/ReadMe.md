@@ -25,10 +25,17 @@ Si no aparece el paquete en tu versión, puedes verificarlo con:
 sudo dnf search dotnet-runtime-10.0
 ```
 
-Instala PostgreSQL y NGINX:
+Instala PostgreSQL y NGINX desde los repositorios de la propia distribución:
 
 ```bash
 sudo dnf install -y postgresql-server postgresql nginx
+```
+
+Si necesitas verificar el paquete disponible en tu versión concreta:
+
+```bash
+sudo dnf search postgresql
+sudo dnf search nginx
 ```
 
 Enlaces oficiales de referencia:
