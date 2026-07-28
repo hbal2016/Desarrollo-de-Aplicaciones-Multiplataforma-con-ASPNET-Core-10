@@ -6,10 +6,36 @@ Desplegar una aplicación ASP.NET Core 10 en un servidor Ubuntu con PostgreSQL y
 ## Pasos rápidos
 
 ### 1. Preparar el servidor
+Actualiza el sistema e instala los componentes base:
+
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y dotnet-runtime-10.0 postgresql postgresql-contrib nginx ufw
+sudo apt install -y curl gnupg ca-certificates lsb-release ufw
 ```
+
+Instala el runtime de .NET 10 usando los repositorios de Ubuntu/Canonical:
+
+```bash
+sudo apt update
+sudo apt install -y dotnet-runtime-10.0
+```
+
+Si tu versión de Ubuntu no lo ofrece de forma inmediata, puedes verificar con:
+
+```bash
+apt search dotnet-runtime-10.0
+```
+
+Instala PostgreSQL y NGINX:
+
+```bash
+sudo apt install -y postgresql postgresql-contrib nginx
+```
+
+Enlaces oficiales de referencia:
+- Ubuntu / Canonical: https://ubuntu.com/server/docs/installing-dotnet
+- PostgreSQL: https://www.postgresql.org/download/linux/ubuntu/
+- NGINX: https://nginx.org/en/linux_packages.html
 
 ### 2. Configurar PostgreSQL
 ```bash

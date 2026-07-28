@@ -6,10 +6,35 @@ Desplegar una aplicación ASP.NET Core 10 en una distribución Fedora o Red Hat 
 ## Pasos rápidos
 
 ### 1. Preparar el servidor
+Actualiza el sistema e instala los componentes base:
+
 ```bash
 sudo dnf update -y
-sudo dnf install -y dotnet-runtime-10.0 postgresql-server postgresql nginx
+sudo dnf install -y curl gpg ca-certificates
 ```
+
+Instala el runtime de .NET 10 usando los repositorios de la propia distribución Fedora:
+
+```bash
+sudo dnf install -y dotnet-runtime-10.0
+```
+
+Si no aparece el paquete en tu versión, puedes verificarlo con:
+
+```bash
+sudo dnf search dotnet-runtime-10.0
+```
+
+Instala PostgreSQL y NGINX:
+
+```bash
+sudo dnf install -y postgresql-server postgresql nginx
+```
+
+Enlaces oficiales de referencia:
+- Fedora / Red Hat: https://learn.microsoft.com/dotnet/core/install/linux
+- PostgreSQL: https://www.postgresql.org/download/linux/redhat/
+- NGINX: https://nginx.org/en/linux_packages.html
 
 ### 2. Configurar PostgreSQL
 ```bash
