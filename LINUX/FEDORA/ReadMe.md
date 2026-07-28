@@ -1,36 +1,27 @@
 # Guía de despliegue en Fedora o Red Hat
 
-## 1. Preparar el servidor
-1. Actualiza el sistema:
-   ```bash
-   sudo dnf update -y
-   ```
-2. Instala .NET 10 Runtime:
-   ```bash
-   sudo dnf install -y dotnet-runtime-10.0
-   ```
-3. Instala PostgreSQL y NGINX:
-   ```bash
-   sudo dnf install -y postgresql-server postgresql nginx
-   ```
+## Objetivo
+Desplegar una aplicación ASP.NET Core 10 en una distribución Fedora o Red Hat con PostgreSQL y NGINX.
 
-## 2. Configurar PostgreSQL
-1. Inicializa la base de datos si es necesario:
-   ```bash
-   sudo postgresql-setup --initdb
-   ```
-2. Crea usuario y base de datos con el cliente psql.
+## Pasos rápidos
 
-## 3. Publicar y ejecutar la aplicación
-1. Publica la aplicación desde Windows o una máquina de desarrollo.
-2. Copia los archivos al servidor.
-3. Usa systemd para ejecutar el proceso de la aplicación igual que en Ubuntu.
+### 1. Preparar el servidor
+```bash
+sudo dnf update -y
+sudo dnf install -y dotnet-runtime-10.0 postgresql-server postgresql nginx
+```
 
-## 4. Configurar NGINX
-1. Crea un archivo de configuración en /etc/nginx/conf.d/.
-2. Define un bloque server con proxy_pass a la URL local de la app.
-3. Reinicia NGINX:
-   ```bash
-   sudo systemctl enable nginx
-   sudo systemctl start nginx
-   ```
+### 2. Configurar PostgreSQL
+```bash
+sudo postgresql-setup --initdb
+```
+Luego crea el usuario y la base de datos con psql.
+
+### 3. Publicar y copiar la aplicación
+Publica la aplicación desde tu equipo de desarrollo y copia los archivos al servidor.
+
+### 4. Ejecutar con systemd
+Configura un servicio systemd para ejecutar la aplicación en http://127.0.0.1:5000.
+
+### 5. Configurar NGINX
+Crea un bloque server en /etc/nginx/conf.d/ con proxy_pass al puerto local de la aplicación y reinicia NGINX.
